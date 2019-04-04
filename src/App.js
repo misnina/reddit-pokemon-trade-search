@@ -1,27 +1,65 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import axios from 'axios';
+
+import Entry from './Entry';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      general: [],
+    }
+  }
+
   render() {
+    const { general } = this.state;
+    let listings = [];
+    general.forEach(listing => {
+      let post = listing.data;
+      let entry =
+        <Entry
+          key={post.title}
+          subName={post.subreddit_name_prefixed}
+          title={post.title}
+          url={post.url}
+          text={post.selftext}
+        />;
+      listings.push(entry);
+    });
+
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+      <div>
+        {listings}
       </div>
     );
+  }
+
+  componentDidMount() {
+    this.fetchGeneralListings();
+  }
+
+  fetchGeneralListings() {
+    let generalListings = [];
+    axios.get(`https://www.reddit.com/r/pokemontrades/search.json?q=LF&q=FT&limit=30&restrict_sr=1&sort=new`)
+      .then(res => {
+        res.data.data.children.forEach(child => {
+          generalListings.push(child);
+        });
+        return axios.get(`https://www.reddit.com/r/CasualPokemonTrades/search.json?q=LF&q=FT&limit=30&restrict_sr=1&sort=new`);
+      })
+      .then(res => {
+        res.data.data.children.forEach(child => {
+          generalListings.push(child);
+        });
+        return axios.get(`https://www.reddit.com/r/RelaxedPokemonTrades/search.json?q=LF&q=FT&limit=30&restrict_sr=1&sort=new`);
+      })
+      .then(res => {
+        res.data.data.children.forEach(child => {
+          generalListings.push(child);
+        });
+        this.setState({ general: generalListings });
+      })
+      .catch(console.log)
   }
 }
 
