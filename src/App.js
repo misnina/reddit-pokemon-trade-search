@@ -19,8 +19,6 @@ class App extends Component {
     let listings = this.listings(specific, searchPokemon) || 0;
     const all = <header>Searching last 30 results of 3 subreddits...</header>;
     const lookSpecific = <header>Searching last 90 results for trades containing {searchPokemon}...</header>;
-    console.log(listings.length);
-    let cantFind = listings.length ? "" : "Couldn't find any trades!"
     const lookups = pokemonArray.map((pokemon, i) => {
       return (
         <option
@@ -50,7 +48,6 @@ class App extends Component {
         {specific ? lookSpecific : all}
         {searchAll}
         <div id="listing-container">
-          {general[89] ? cantFind : ""}
           {general[89] ? listings : "Loading..."}
         </div>
       </div>
@@ -97,7 +94,7 @@ class App extends Component {
       return general.map((listing, i) => {
         let post = listing.data;
         let pkmnMentioned = this.getPKMNMentioned(post);
-        if (pkmnMentioned.includes(pokemon)) {
+        if (pkmnMentioned.includes(pokemon, i)) {
           return <Entry
             key={post.title + i}
             subName={post.subreddit_name_prefixed}

@@ -1,30 +1,15 @@
 import React from 'react';
-import { pokemonArray } from './pokemonArray';
 import Sprite from './Sprite';
 
 export default function Entry(props) {
-  let pkmnMentioned = [];
-  pokemonArray.forEach(pokemon => {
-    let bodySearch = props.text.search(pokemon);
-    if (bodySearch >= 1) {
-      pkmnMentioned.push(pokemon);
-    } else {
-      let titleSearch = props.title.search(pokemon);
-      if (titleSearch >= 1) {
-        pkmnMentioned.push(pokemon);
-      }
-    }
-  });
-
   let spritesMentioned = [];
-  pkmnMentioned.forEach(pokemon => {
+  props.pkmnMentioned.forEach(pokemon => {
     let spriteName = pokemon
       .replace(/\s+/g, '-')
       .replace(/[.,':\s]/g, "")
       .replace(/♀/g, "-f")
       .replace(/♂/g, "-m")
       .toLowerCase();
-    //console.log(`${props.searchPokemon} ${pokemon} ${pokemon === props.searchPokemon}`);
     spritesMentioned.push(
       <Sprite
         key={pokemon}
