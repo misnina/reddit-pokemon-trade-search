@@ -21,24 +21,37 @@ export default function Entry(props) {
     let spriteName = pokemon
       .replace(/\s+/g, '-')
       .replace(/[.,':\s]/g, "")
-      .replace(/[♀\s]/g, "-f")
-      .replace(/[♂\s]/g, "-m")
+      .replace(/♀/g, "-f")
+      .replace(/♂/g, "-m")
       .toLowerCase();
+    //console.log(`${props.searchPokemon} ${pokemon} ${pokemon === props.searchPokemon}`);
     spritesMentioned.push(
-      <Sprite name={spriteName} />
+      <Sprite
+        key={pokemon}
+        fullName={pokemon}
+        name={spriteName}
+        isSearched={pokemon === props.searchPokemon}
+        setSpecificAndPokemon={props.setSpecificAndPokemon}
+      />
     );
   })
+
   return (
     <div className="entry">
-      <div>{props.subName}</div>
+      <div className="subname">{props.subName}</div>
       <a
         href={props.url}
         target="_blank"
         rel="noopener noreferrer"
-      >{props.title}</a>
-      <div className="sprites">
-        <div>Pokemon Mentioned:</div>
-        {spritesMentioned}
+        className="title"
+      >
+        {props.title.replace(/(&amp;)/g, "&")}
+      </a>
+      <div className="sprites-container">
+        <h3>Pokemon Mentioned:</h3>
+        <div className="sprites">
+          {spritesMentioned.length ? spritesMentioned : "None"}
+        </div>
       </div>
     </div>
   );
